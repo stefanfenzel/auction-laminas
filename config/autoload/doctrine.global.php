@@ -23,7 +23,6 @@ return [
                     'user' => '',
                     'password' => '',
                 ],
-                'doctrine_mapping_types' => ['enum' => 'string'],
             ],
         ],
         'configuration' => [
