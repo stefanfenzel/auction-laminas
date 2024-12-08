@@ -14,6 +14,7 @@
         "doctrine/doctrine-bundle": "^2.13",
         "doctrine/doctrine-module": "^6.1",
         "doctrine/doctrine-orm-module": "^6.1",
+        "laminas/laminas-authentication": "^2.18",
         "laminas/laminas-component-installer": "^3.4.0",
         "laminas/laminas-db": "^2.20.0",
         "laminas/laminas-development-mode": "^3.12.0",
