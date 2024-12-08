@@ -21,7 +21,8 @@ readonly class DoctrineAuctionRepository implements AuctionRepositoryInterface
     {
         return $this->entityManager->createQueryBuilder()
             ->select('a')
-            ->andWhere('a.id = :id')
+            ->from(Auction::class, 'a')
+            ->where('a.id = :id')
             ->setParameter('id', $id->toString())
             ->orderBy('a.createdAt', 'ASC')
             ->getQuery()
@@ -32,7 +33,8 @@ readonly class DoctrineAuctionRepository implements AuctionRepositoryInterface
     {
         $query = $this->entityManager->createQueryBuilder()
             ->select('a')
-            ->andWhere('a.user = :userId')
+            ->from(Auction::class, 'a')
+            ->where('a.user = :userId')
             ->setParameter('userId', $userId)
             ->orderBy('a.createdAt', 'ASC')
             ->getQuery();
@@ -45,7 +47,7 @@ readonly class DoctrineAuctionRepository implements AuctionRepositoryInterface
         $query = $this->entityManager->createQueryBuilder()
             ->select('a')
             ->from(Auction::class, 'a')
-            ->andWhere('a.endDate > :now')
+            ->where('a.endDate > :now')
             ->setParameter('now', new DateTime())
             ->orderBy('a.createdAt', 'ASC')
             ->getQuery();

@@ -4,33 +4,39 @@ namespace Auction\Infrastructure\Users\Repository;
 
 use Auction\Domain\Users\User;
 use Auction\Domain\Users\UserRepositoryInterface;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
-/**
- * @extends ServiceEntityRepository<User>
- */
-class DoctrineUserRepository extends ServiceEntityRepository implements UserRepositoryInterface
+class DoctrineUserRepository implements UserRepositoryInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        parent::__construct($registry, User::class);
     }
 
     public function save(User $user): void
     {
-        $entityManager = $this->getEntityManager();
-        $entityManager->persist($user);
-        $entityManager->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
     }
 
     public function findByEmail(string $email): ?User
     {
-        return $this->findOneBy(['email' => $email]);
+        return $this->entityManager->createQueryBuilder()
+            ->select('u')
+            ->from(User::class, 'u')
+            ->where('u.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     public function findById(int $id): ?User
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->entityManager->createQueryBuilder()
+            ->select('u')
+            ->from(User::class, 'u')
+            ->where('u.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

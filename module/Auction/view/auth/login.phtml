@@ -1,0 +1,25 @@
+<?php
+
+$title = 'Login';
+$this->headTitle($title);
+?>
+
+<h1><?= $this->escapeHtml($title) ?></h1>
+
+<?php if ($this->error) : ?>
+    <div class="alert alert-danger">
+        <?= $this->escapeHtml($this->error) ?>
+    </div>
+<?php endif; ?>
+
+<form action="<?= $this->url('login') ?>" method="post">
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Login</button>
+</form>

@@ -7,18 +7,21 @@ namespace Auction;
 use Auction\App\Auctions\Controller\AuctionsController;
 use Auction\App\Auctions\Controller\AuctionsControllerFactory;
 use Auction\App\Users\Controller\AuthController;
+use Auction\App\Users\Controller\AuthControllerFactory;
 use Auction\App\UuidFromRamseyFactory;
 use Auction\Infrastructure\Auctions\Repository\DoctrineAuctionRepository;
 use Auction\Infrastructure\Auctions\Repository\DoctrineAuctionRepositoryFactory;
+use Auction\Infrastructure\Users\Repository\DoctrineUserRepository;
+use Auction\Infrastructure\Users\Repository\DoctrineUserRepositoryFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Laminas\Router\Http\Literal;
-use Laminas\Router\Http\Placeholder;
 use Laminas\Router\Http\Segment;
 
 return [
     'controllers' => [
         'factories' => [
             AuctionsController::class => AuctionsControllerFactory::class,
+            AuthController::class => AuthControllerFactory::class,
         ],
     ],
     'router' => [
@@ -79,6 +82,7 @@ return [
     'service_manager' => [
         'factories' => [
             DoctrineAuctionRepository::class => DoctrineAuctionRepositoryFactory::class,
+            DoctrineUserRepository::class => DoctrineUserRepositoryFactory::class,
         ],
         'invokables' => [
             UuidFromRamseyFactory::class => UuidFromRamseyFactory::class,
