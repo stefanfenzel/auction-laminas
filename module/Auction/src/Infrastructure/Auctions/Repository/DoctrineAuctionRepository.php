@@ -8,20 +8,19 @@ use Auction\Domain\Auctions\Auction;
 use Auction\Domain\Auctions\AuctionRepositoryInterface;
 use Auction\Domain\Uuid;
 use DateTime;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
-class DoctrineAuctionRepository extends ServiceEntityRepository implements AuctionRepositoryInterface
+readonly class DoctrineAuctionRepository implements AuctionRepositoryInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        parent::__construct($registry, Auction::class);
     }
 
     public function findById(Uuid $id): ?Auction
     {
-        return $this->createQueryBuilder('a')
+        return $this->entityManager->createQueryBuilder()
+            ->select('a')
             ->andWhere('a.id = :id')
             ->setParameter('id', $id->toString())
             ->orderBy('a.createdAt', 'ASC')
@@ -31,7 +30,8 @@ class DoctrineAuctionRepository extends ServiceEntityRepository implements Aucti
 
     public function findByUserId(int $userId): ArrayCollection
     {
-        $query = $this->createQueryBuilder('a')
+        $query = $this->entityManager->createQueryBuilder()
+            ->select('a')
             ->andWhere('a.user = :userId')
             ->setParameter('userId', $userId)
             ->orderBy('a.createdAt', 'ASC')
@@ -42,7 +42,9 @@ class DoctrineAuctionRepository extends ServiceEntityRepository implements Aucti
 
     public function findRunningAuctions(): ArrayCollection
     {
-        $query = $this->createQueryBuilder('a')
+        $query = $this->entityManager->createQueryBuilder()
+            ->select('a')
+            ->from(Auction::class, 'a')
             ->andWhere('a.endDate > :now')
             ->setParameter('now', new DateTime())
             ->orderBy('a.createdAt', 'ASC')
@@ -53,21 +55,19 @@ class DoctrineAuctionRepository extends ServiceEntityRepository implements Aucti
 
     public function save(Auction $auction): void
     {
-        $entityManager = $this->getEntityManager();
-        $entityManager->persist($auction);
-        $entityManager->flush();
+        $this->entityManager->persist($auction);
+        $this->entityManager->flush();
     }
 
     public function delete(Uuid $id): void
     {
-        $entityManager = $this->getEntityManager();
         $auction = $this->findById($id);
 
         if ($auction === null) {
             return;
         }
 
-        $entityManager->remove($auction);
-        $entityManager->flush();
+        $this->entityManager->remove($auction);
+        $this->entityManager->flush();
     }
 }

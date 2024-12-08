@@ -5,30 +5,54 @@ declare(strict_types=1);
 namespace Auction;
 
 use Auction\App\Auctions\Controller\AuctionsController;
+use Auction\App\Auctions\Controller\AuctionsControllerFactory;
 use Auction\App\Users\Controller\AuthController;
+use Auction\App\UuidFromRamseyFactory;
+use Auction\Infrastructure\Auctions\Repository\DoctrineAuctionRepository;
+use Auction\Infrastructure\Auctions\Repository\DoctrineAuctionRepositoryFactory;
+use Doctrine\ORM\EntityManagerInterface;
 use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Placeholder;
 use Laminas\Router\Http\Segment;
-use Laminas\ServiceManager\Factory\InvokableFactory;
 
 return [
     'controllers' => [
         'factories' => [
-            AuctionsController::class => InvokableFactory::class,
+            AuctionsController::class => AuctionsControllerFactory::class,
         ],
     ],
     'router' => [
         'routes' => [
-            'album' => [
-                'type'    => Segment::class,
+            'home' => [
+                'type'    => Literal::class,
                 'options' => [
-                    'route' => '/auction[/:action[/:id]]',
+                    'route' => '/home',
+                    'defaults' => [
+                        'controller' => AuctionsController::class,
+                        'action'     => 'home',
+                    ],
+                ],
+            ],
+            'dashboard' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/dashboard',
+                    'defaults' => [
+                        'controller' => AuctionsController::class,
+                        'action'     => 'dashboard',
+                    ],
+                ],
+            ],
+            'show' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/show/:id',
                     'constraints' => [
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id'     => '[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}',
+                        'id' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',
                     ],
                     'defaults' => [
                         'controller' => AuctionsController::class,
-                        'action'     => 'index',
+                        'action'     => 'show',
                     ],
                 ],
             ],
@@ -48,10 +72,19 @@ return [
         'template_path_stack' => [
             'auction' => __DIR__ . '/../view',
         ],
+        'template_map' => [
+            '/auction' => __DIR__ . '/../view/auction/home.phtml',
+        ]
     ],
     'service_manager' => [
         'factories' => [
-            // add factories here
+            DoctrineAuctionRepository::class => DoctrineAuctionRepositoryFactory::class,
+        ],
+        'invokables' => [
+            UuidFromRamseyFactory::class => UuidFromRamseyFactory::class,
+        ],
+        'aliases' => [
+            EntityManagerInterface::class => 'doctrine.entitymanager.orm_default',
         ],
     ],
 ];

@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Auction\App\Auctions\Controller;
 
+use Auction\Domain\Auctions\AuctionRepositoryInterface;
+use Auction\Domain\Uuid;
 use Auction\Domain\UuidFactory;
-use Auction\Infrastructure\Auctions\Repository\DoctrineAuctionRepository;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
@@ -13,29 +14,37 @@ final class AuctionsController extends AbstractActionController
 {
     public function __construct(
         private readonly UuidFactory $uuidFactory,
-        private readonly DoctrineAuctionRepository $repository,
+        private readonly AuctionRepositoryInterface $repository,
     )
     {
     }
 
-    public function indexAction()
+    public function homeAction(): ViewModel
     {
         $auctions = $this->repository->findRunningAuctions();
 
-        return new ViewModel([
+        $view = new ViewModel([
             'auctions' => $auctions,
         ]);
+        $view->setTemplate('auction/home');
+
+        return $view;
     }
 
-    public function addAction()
+    public function dashboardAction()
     {
     }
 
-    public function editAction()
+    public function showAction(): ViewModel
     {
-    }
+        $id = $this->params()->fromRoute('id');
+        $auction = $this->repository->findById(Uuid::fromString($id));
 
-    public function deleteAction()
-    {
+        $view = new ViewModel([
+            'auction' => $auction,
+        ]);
+        $view->setTemplate('auction/show');
+
+        return $view;
     }
 }
