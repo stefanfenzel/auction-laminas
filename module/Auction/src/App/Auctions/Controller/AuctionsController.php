@@ -45,9 +45,7 @@ final class AuctionsController extends AbstractActionController
             return $this->redirect()->toRoute('login');
         }
 
-        /** @var User $user */
-        $user = $this->userRepository->findByEmail($email);
-        $auctions = $this->auctionRepository->findByUserId($user->getId());
+        $auctions = $this->auctionRepository->findRunningAuctions();
 
         $view = new ViewModel([
             'auctions' => $auctions,
@@ -68,6 +66,27 @@ final class AuctionsController extends AbstractActionController
             'auction' => $auction,
         ]);
         $view->setTemplate('auction/show');
+
+        return $view;
+    }
+
+    public function auctionsAction(): Response|ViewModel
+    {
+        $email = $this->auth->getIdentity();
+        if ($email === null) {
+            return $this->redirect()->toRoute('login');
+        }
+
+        /** @var User $user */
+        $user = $this->userRepository->findByEmail($email);
+        $auctions = $this->auctionRepository->findByUserId($user->getId());
+
+        $view = new ViewModel([
+            'auctions' => $auctions,
+            'identity' => $email,
+        ]);
+        $view->setTemplate('auction/auctions');
+        $this->layout()->setVariable('identity', $email);
 
         return $view;
     }
