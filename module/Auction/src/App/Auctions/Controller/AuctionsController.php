@@ -33,6 +33,7 @@ final class AuctionsController extends AbstractActionController
             'identity' => $this->auth->getIdentity(),
         ]);
         $view->setTemplate('auction/home');
+        $this->layout()->setVariable('identity', $this->auth->getIdentity());
 
         return $view;
     }
@@ -50,8 +51,10 @@ final class AuctionsController extends AbstractActionController
 
         $view = new ViewModel([
             'auctions' => $auctions,
+            'identity' => $email,
         ]);
         $view->setTemplate('auction/dashboard');
+        $this->layout()->setVariable('identity', $email);
 
         return $view;
     }

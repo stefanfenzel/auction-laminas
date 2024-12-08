@@ -7,7 +7,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <?= $this->headTitle('Laminas MVC Skeleton')->setSeparator(' - ')->setAutoEscape(false) ?>
+        <?= $this->headTitle('Laminas Auction')->setSeparator(' - ')->setAutoEscape(false) ?>
 
         <?= $this->headMeta()
             ->appendName('viewport', 'width=device-width, initial-scale=1.0')
@@ -31,7 +31,7 @@
             <div class="container">
                 <a class="navbar-brand" href="<?= $this->url('home') ?>">
                     <img src="<?= $this->basePath('img/laminas-logo.svg') ?>" alt="Laminas">
-                    <span class="navbar-text text-light">MVC Skeleton</span>
+                    <span class="navbar-text text-light">Auction</span>
                 </a>
                 <button
                     class="navbar-toggler"
@@ -54,6 +54,27 @@
                             >Home
                             </a>
                         </li>
+                        <?php if ($this->identity) : ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= $this->url('dashboard') ?>">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= $this->url('auctions') ?>">My Auctions</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= $this->url('auctions_create') ?>">Create</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= $this->url('logout') ?>">Logout</a>
+                            </li>
+                        <?php else : ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= $this->url('login') ?>">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= $this->url('register') ?>">Register</a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>

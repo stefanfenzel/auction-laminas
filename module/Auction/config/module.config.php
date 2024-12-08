@@ -69,15 +69,64 @@ return [
                     ],
                 ],
             ],
+            'auctions' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/auctions',
+                    'defaults' => [
+                        'controller' => AuctionsController::class,
+                        'action'     => 'auctions',
+                    ],
+                ],
+            ],
+            'auctions_create' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/auctions/create',
+                    'defaults' => [
+                        'controller' => AuctionsController::class,
+                        'action'     => 'create',
+                    ],
+                ],
+            ],
+            'logout' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/logout',
+                    'defaults' => [
+                        'controller' => AuthController::class,
+                        'action'     => 'logout',
+                    ],
+                ],
+            ],
+            'register' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/register',
+                    'defaults' => [
+                        'controller' => AuthController::class,
+                        'action'     => 'register',
+                    ],
+                ],
+            ],
         ],
     ],
     'view_manager' => [
+        'display_not_found_reason' => true,
+        'display_exceptions'       => true,
+        'doctype'                  => 'HTML5',
+        'not_found_template'       => 'error/404',
+        'exception_template'       => 'error/index',
+        'template_map' => [
+            'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
+            'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
+            'error/404'               => __DIR__ . '/../view/error/404.phtml',
+            'error/index'             => __DIR__ . '/../view/error/index.phtml',
+            '/auction' => __DIR__ . '/../view/auction/home.phtml',
+        ],
         'template_path_stack' => [
             'auction' => __DIR__ . '/../view',
         ],
-        'template_map' => [
-            '/auction' => __DIR__ . '/../view/auction/home.phtml',
-        ]
     ],
     'service_manager' => [
         'factories' => [
