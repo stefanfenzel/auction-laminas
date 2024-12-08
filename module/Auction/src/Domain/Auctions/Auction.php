@@ -7,6 +7,7 @@ namespace Auction\Domain\Auctions;
 use Auction\Domain\Offers\Offer;
 use Auction\Domain\Users\User;
 use Auction\Infrastructure\Auctions\Repository\DoctrineAuctionRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -25,62 +26,62 @@ class Auction
     public function __construct(
         #[ORM\Id]
         #[ORM\Column(type: 'string', length: 36)]
-        private ?string $id = null,
+        private string $id,
         #[ORM\ManyToOne(inversedBy: 'auctions')]
         #[ORM\JoinColumn(nullable: false)]
-        private ?User $user = null,
+        private User $user,
         #[ORM\Column(length: 255)]
-        private ?string $title = null,
+        private string $title,
         #[ORM\Column(type: Types::TEXT)]
-        private ?string $description = null,
+        private string $description,
         #[ORM\Column(name: 'start_price')]
-        private ?float $startPrice = null,
+        private float $startPrice,
         #[ORM\Column(name: 'end_date')]
-        private ?\DateTimeImmutable $endDate = null,
+        private DateTimeImmutable $endDate,
         #[ORM\Column(name: 'created_at')]
-        private ?\DateTimeImmutable $createdAt = null,
+        private DateTimeImmutable $createdAt,
         #[ORM\Column(name: 'updated_at')]
-        private ?\DateTimeImmutable $updatedAt = null,
+        private DateTimeImmutable $updatedAt,
     ) {
         $this->offers = new ArrayCollection();
     }
 
-    public function getId(): ?string
+    public function getId(): string
     {
         return $this->id;
     }
 
-    public function getUser(): ?User
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    public function getStartPrice(): ?float
+    public function getStartPrice(): float
     {
         return $this->startPrice;
     }
 
-    public function getEndDate(): ?\DateTimeImmutable
+    public function getEndDate(): DateTimeImmutable
     {
         return $this->endDate;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): DateTimeImmutable
     {
         return $this->updatedAt;
     }

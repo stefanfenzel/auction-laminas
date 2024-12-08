@@ -6,6 +6,8 @@ namespace Auction\Domain\Users;
 
 use Auction\Domain\Auctions\Auction;
 use Auction\Infrastructure\Users\Repository\DoctrineUserRepository;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -25,83 +27,48 @@ class User
         #[ORM\Id]
         #[ORM\GeneratedValue]
         #[ORM\Column(name: 'id', type: Types::BIGINT, length: 20)]
-        private ?int $id = null,
+        private int $id,
         #[ORM\Column(length: 255)]
-        private ?string $name = null,
+        private string $name,
         #[ORM\Column(length: 255)]
-        private ?string $email = null,
+        private string $email,
         #[ORM\Column(name: 'email_verified_at', type: Types::TIME_MUTABLE, nullable: true)]
-        private ?\DateTimeInterface $emailVerifiedAt = null,
+        private ?DateTimeInterface $emailVerifiedAt = null,
         #[ORM\Column(length: 255)]
-        private ?string $password = null,
+        private string $password,
         #[ORM\Column(name: 'remember_token', length: 100, nullable: true)]
         private ?string $rememberToken = null,
         #[ORM\Column(name: 'created_at')]
-        private ?\DateTimeImmutable $createdAt = null,
+        private DateTimeImmutable $createdAt,
         #[ORM\Column(name: 'updated_at')]
-        private ?\DateTimeImmutable $updatedAt = null,
+        private DateTimeImmutable $updatedAt,
     ) {
         $this->auctions = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setId(int $id): static
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    public function getEmailVerifiedAt(): ?\DateTimeInterface
+    public function getEmailVerifiedAt(): ?DateTimeInterface
     {
         return $this->emailVerifiedAt;
     }
 
-    public function setEmailVerifiedAt(?\DateTimeInterface $emailVerifiedAt): static
-    {
-        $this->emailVerifiedAt = $emailVerifiedAt;
-
-        return $this;
-    }
-
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
         return $this->password;
-    }
-
-    public function setPassword(string $password): static
-    {
-        $this->password = $password;
-
-        return $this;
     }
 
     public function getRememberToken(): ?string
@@ -109,35 +76,14 @@ class User
         return $this->rememberToken;
     }
 
-    public function setRememberToken(?string $rememberToken): static
-    {
-        $this->rememberToken = $rememberToken;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): DateTimeImmutable
     {
         return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
     }
 
     /**
@@ -152,7 +98,6 @@ class User
     {
         if (! $this->auctions->contains($auction)) {
             $this->auctions->add($auction);
-            $auction->setUser($this);
         }
 
         return $this;
@@ -160,12 +105,7 @@ class User
 
     public function removeAuction(Auction $auction): static
     {
-        if ($this->auctions->removeElement($auction)) {
-            // set the owning side to null (unless already changed)
-            if ($auction->getUser() === $this) {
-                $auction->setUser(null);
-            }
-        }
+        $this->auctions->removeElement($auction);
 
         return $this;
     }
