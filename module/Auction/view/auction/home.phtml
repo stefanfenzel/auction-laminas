@@ -1,0 +1,23 @@
+<?php
+
+$title = 'Current auctions';
+$this->headTitle($title);
+?>
+
+<h1><?= $this->escapeHtml($title) ?></h1>
+
+<?php if ($this->flashMessenger()->hasMessages()) : ?>
+    <div class="alert alert-info">
+        <?php foreach ($this->flashMessenger()->getMessages() as $message) : ?>
+            <?= $this->escapeHtml($message) ?>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
+<?php foreach ($this->auctions as $auction) : ?>
+    <h2><a href="<?= $this->url('show', ['id' => $auction->getId()]) ?>"><?= $this->escapeHtml($auction->getTitle()) ?></a></h2>
+    <p><?= $this->escapeHtml($auction->getDescription()) ?></p>
+<!-- $auction->getOffers()->last()->getBidAmount() ?? $auction->getStartPrice() -->
+    <p>Price: <?= $auction->getStartPrice() ?>€</p>
+    <p>Ends at: <?= $this->escapeHtml($auction->getEndDate()->format('Y-m-d H:i:s')) ?></p>
+<?php endforeach; ?>
